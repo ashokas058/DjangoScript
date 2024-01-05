@@ -22,8 +22,8 @@ class Starter:
             if(os.path.isfile(sourceFile) and os.path.isdir(destinationPath)):
                 FileIO().unzipFiles(sourceFile,TEMP_UNZIP)
                 FileIO().sync_files(TEMP_UNZIP,destinationPath)
-                FileIO().deleteFilesDir(TEMP_UNZIP)
-                FileIO().deleteFile(sourceFile)
+                FileIO().deleteDirBash(join(TEMP_UNZIP,"/*"))
+                # FileIO().deleteFile(sourceFile)
                 self.log.createLog_data(f"completedAPI update :- {destinationPath}",DJANGO_LOGGING)
             else:
                 return False

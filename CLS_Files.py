@@ -16,6 +16,14 @@ class FileIO:
             if fnmatch.fnmatch(filename, f"*{keyword}*"):
                 matchingFiles.append(filename)
         return matchingFiles
+
+    def deleteDirBash(self,directoryPath):
+        try:
+            subprocess.check_call(['rm', '-rf', directoryPath])
+            return True
+        except subprocess.CalledProcessError:
+            print(f"deleted files under {directoryPath}\n")
+            return True
     def deleteFilesDir(self, directory_path):
         try:
             if not os.path.exists(directory_path):
