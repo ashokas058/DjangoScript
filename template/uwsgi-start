@@ -1,0 +1,51 @@
+#!/bin/bash
+NAME="apiName"
+DJANGODIR=/home/beeka/WEBAPP/projectName/apiName/beeka_erp_backend    # Django project directory
+PORT=port
+DOMAIN="domainName"
+VENV=/home/beeka/WEBAPP/projectName/bin/activate
+
+DJANGO_SETTINGS_MODULE=Beeka_ERP_Backend.settings             # which settings file should Django use
+DJANGO_WSGI_MODULE=Beeka_ERP_Backend.wsgi                     # WSGI module name
+
+#SOCKFILE=/home/erp/run/gunicorn.sock  # we will communicte using this unix socket
+
+USER=beeka                                       # the user to run as
+GROUP=sys_beeka                                     # the group to run as
+
+NUM_WORKERS=1                                   # how many worker processes should Gunicorn spawn
+
+IP=0.0.0.0
+
+#----------------------------------------------------------No Modification required --------------------------------------
+echo "Starting $NAME as `whoami`"
+cd $DJANGODIR
+source $VENV
+export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+export PYTHONPATH=$DJANGODIR:$PYTHONPATH
+
+# Create the run directory if it doesn't exist
+#RUNDIR=$(dirname $SOCKFILE)
+#test -d $RUNDIR || mkdir -p $RUNDIR
+
+PID=$(fuser $PORT/tcp 2>/dev/null) 
+
+if [ -n "$PID" ]; then
+    echo "Process running on port $PORT: $PID"
+    echo "Killing process $PID"
+    kill -9 $PID
+fi    
+
+python $DJANGODIR/manage.py runsslserver --cert /etc/letsencrypt/live/$DOMAIN/fullchain.pem --key /etc/letsencrypt/live/$DOMAIN/privkey.pem $IP:$PORT
+
+uwsgi --chdir=$DJANGODIR \
+    --module=$DJANGO_WSGI_MODULE:application \
+    --env DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE \
+    --master --pidfile=$DJANGODIR/master.pid \
+    --bind=$IP:$PORT \      # can also be a file
+    --processes=5 \                 # number of worker processes
+    --uid=1000 --gid=2000 \         # if root, uwsgi can drop privileges
+    --harakiri=20 \                 # respawn processes taking more than 20 seconds
+    --max-requests=5000 \           # respawn processes after serving 5000 requests
+    --vacuum \                      # clear environment on exit
+    --daemonize=$DJANGODIR/logs/uwsgi_supervisor.log      #
