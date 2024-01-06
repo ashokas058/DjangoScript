@@ -28,11 +28,11 @@ try:
                     projectName=Starter().uiSelection(DJANGO_PROJECT_DIR,EXCLUDE_FILES)
                     apiDataArray=Starter().initApiConfiguration(Starter().initAPI(projectName))
                     if(apiDataArray):
-                        if(input("Import Backend and Frontend Files Y/N ?\n")=='Y'):
+                        if(input("Import Backend and Frontend Files Y/N ?\n").lower()=='Y'):
                             if(Starter().migrateApi(apiDataArray[-1])):
                                 if(input("restore DB now Y/N ?\n").lower()=='y'):
                                     Starter().migrateDb(apiDataArray[-1],input("\nEnter the Database name\n"))
-                            if(input("Do you want to install SSL now Y/N ?\n")=='Y'):
+                            if(input("Do you want to install SSL now Y/N ?\n").lower()=='Y'):
                                 Starter().installSSL(input("Enter the domain\n"))
                     UtilesDjango().clear()
                 elif(stat==3):

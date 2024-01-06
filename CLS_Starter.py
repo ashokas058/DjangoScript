@@ -20,9 +20,10 @@ class Starter:
     def updateApiCode(self, sourceFile, destinationPath):
         try:
             if(os.path.isfile(sourceFile) and os.path.isdir(destinationPath)):
+                FileIO().createDir(TEMP_UNZIP)
                 FileIO().unzipFiles(sourceFile,TEMP_UNZIP)
-                FileIO().sync_files(TEMP_UNZIP,destinationPath)
-                FileIO().deleteDirBash(join(TEMP_UNZIP,"/*"))
+                FileIO().sync_files(f"{TEMP_UNZIP}/",destinationPath)
+                FileIO().deleteDirBash(TEMP_UNZIP)
                 # FileIO().deleteFile(sourceFile)
                 self.log.createLog_data(f"completedAPI update :- {destinationPath}",DJANGO_LOGGING)
             else:
@@ -137,6 +138,7 @@ class Starter:
                     if(apiFolder):
                         if not (initPort.isPortInUse(port)):
                             initPort.setPortToProject(port+1,portFilePath)
+                            print(apiFolder)
                             return apiFolder
                     else:
                         print(f"api already exist\n")
@@ -165,10 +167,11 @@ class Starter:
     def initApiConfiguration(self,apiFolder):
         try:
             if(len(apiFolder)>0):
+                print(apiFolder)
                 apiPathSplit=apiFolder.split("-")
                 project=f"Project-{apiPathSplit[1]}"
                 domain=apiPathSplit[0]
-                uwsgiPath=os.path.join(os.path.join(DJANGO_PROJECT_DIR,project),apiFolder)
+                uwsgiPath=join(join(DJANGO_PROJECT_DIR,project),apiFolder)
                 supervisorFilePath=FileIO().updateScript(TEMPLATE_SUPERVISOR,SUPERVISOR_CNF,apiFolder,".conf")
                 uwsgiScriptpath=FileIO().updateScript(TEMPLATE_UWSGI,uwsgiPath,apiFolder,".sh")
                 nginxConfPath=FileIO().updateScript(TEMPLATE_NGINX,NGINX_SITEAVAILABLE,apiFolder,".conf")

@@ -17,12 +17,16 @@ class FileIO:
                 matchingFiles.append(filename)
         return matchingFiles
 
+    def createDir(self,name):
+        os.makedirs(name, exist_ok=True)
+
     def deleteDirBash(self,directoryPath):
         try:
             subprocess.check_call(['rm', '-rf', directoryPath])
-            return True
-        except subprocess.CalledProcessError:
             print(f"deleted files under {directoryPath}\n")
+            return True
+        except Exception as e:
+            print(f"deleted files under {e}\n")
             return True
     def deleteFilesDir(self, directory_path):
         try:
@@ -80,7 +84,7 @@ class FileIO:
     def unzipFiles(self,zipFilePath, destinationPath):
         try:
             if(os.path.isfile(zipFilePath) and os.path.isdir(destinationPath)):
-                subprocess.run(['unzip', zipFilePath, '-d', destinationPath], check=True)
+                subprocess.run(['unzip', '-o', zipFilePath, '-d', destinationPath], check=True)
                 print(f'Successfully unzipped {zipFilePath} to {destinationPath}')
                 self.logger.createLog_data(f'Successfully unzipped {zipFilePath} to {destinationPath}',DJANGO_LOGGING)
                 return True
@@ -289,7 +293,3 @@ class FileIO:
         except subprocess.CalledProcessError as e:
             print(f"Error in poastgres: {e}")
             return False
-
-
-
-

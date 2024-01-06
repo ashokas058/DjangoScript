@@ -3,7 +3,7 @@ DJANGO_PORT_CONFIG_DIR="/home/ash/WEBAPP_Config"
 DJANGO_PROJECT_DIR="/home/ash/WEBAPP"
 DJANGO_BACKUP="/backup"
 DJANGO_UPLOAD="/upload"
-TEMP_UNZIP="/zipBin/api/"
+TEMP_UNZIP="/zipBin/api"
 
 EXCLUDE_FILES=["bin",".gitignore","pyvenv.cfg","lib"]
 
@@ -36,8 +36,8 @@ PYTHON_PACKAGE=[
 ]
 PORT_POOL="portPool.txt"
 PORT_COMMON="port.txt"
-TEMPLATE_NGINX="/home/ash/Project/DevOps/beeka/template/nginx.conf"
-TEMPLATE_SUPERVISOR="/home/ash/Project/DevOps/beeka/template/supervisor.conf"
-TEMPLATE_UWSGI="/home/ash/Project/DevOps/beeka/template/uwsgi-start"
+TEMPLATE_NGINX="/home/ash/Project/DevOps/DjangoScript/template/nginx.conf"
+TEMPLATE_SUPERVISOR="/home/ash/Project/DevOps/DjangoScript/template/supervisor.conf"
+TEMPLATE_UWSGI="/home/ash/Project/DevOps/DjangoScript/template/uwsgi-start"
 
 
